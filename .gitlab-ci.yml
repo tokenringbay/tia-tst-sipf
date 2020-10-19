@@ -1,0 +1,32 @@
+image: golang:1.9.2
+
+variables:
+  BIN_NAME: esa
+  ARTIFACTS_DIR: ${CI_PROJECT_DIR}/bin
+  GO_PROJECT: gitlab.com/Ramkrishnan/dcfabricclean
+
+stages:
+  - build
+  - test
+
+before_script:
+  - export GOPATH=$GOPATH:${CI_PROJECT_DIR}	
+  - echo $GOPATH
+  - cd ${CI_PROJECT_DIR}/src/esa
+  
+build-my-project:
+  stage: build
+  script:
+    - go install 	
+  artifacts:
+    paths:
+      - ${ARTIFACTS_DIR}
+
+test-my-project:
+  stage: test
+  script:
+    - go get github.com/stretchr/testify/assert
+    - cd ${CI_PROJECT_DIR}/src/test/Unit/UseCase
+    - go test -coverpkg esa/UseCase
+
+

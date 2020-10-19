@@ -1,0 +1,9 @@
+WINDOWS_APP: efa-server.exe
+LINUX_APP: efa-server
+SWITCH_1: "10.20.50.201"
+SWITCH_2: "10.20.50.203"
+SWITCH_3: "10.20.50.204"
+
+VALIDATE_FABRIC_FAILED: "Validate Fabric [Failed]"
+VALIDATE_NO_LEAF : "No Leaf Devices"
+VALIDATE_NO_SPINE : "No Spine Devices"

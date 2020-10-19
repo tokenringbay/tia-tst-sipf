@@ -1,0 +1,302 @@
+/***********************************************************************
+ * brocade-fabric.yang
+ *      Brocade Data Center Fabric management module
+ *
+ * Dec 2017, Shivanand Tatpatti
+ *
+ * Copyright (c) 2017 by Brocade Communications Systems, Inc.
+ * All rights reserved.
+ *
+ **********************************************************************/
+
+module brocade-fabric {
+
+    namespace "urn:brocade.com:mgmt:brocade-fabric";
+    prefix "fabric";
+
+    import ietf-inet-types {
+        prefix "inet";
+    }
+
+    description
+        "This management module is an instrumentation to manage the data center fabric.";
+
+    typedef name32-type {
+        type string {
+            pattern '[-_a-zA-Z0-9]{1,32}';
+        }
+        description
+            "Defines common type for names. Name can contain maximum of
+            32 characters. Alphabets, digits, hyphen and underscore
+            charcters are allowed.";
+    }
+
+    typedef bfd-tx-interval-type {
+        type uint32 {
+            range "100..30000";
+        }
+        units "milliseconds";
+    }
+
+    typedef bfd-rx-interval-type {
+        type uint32 {
+            range "300..30000";
+        }
+        units "milliseconds";
+    }
+
+    typedef bfd-multiplier-type {
+        type uint32 {
+            range "3..50";
+        }
+        units "milliseconds";        
+    }
+
+    typedef fabric-name-type {
+        type name32-type;
+        description
+            "Defines common type for fabric name.";
+    }
+
+    typedef leaf-type {
+        type enumeration {
+            enum non-border-leaf {
+                value 1;
+            }
+            enum border-leaf {
+                value 2;
+            }
+        }
+        description
+            "Defines common type to determine type of leaf.";
+    }
+
+    typedef spine-type {
+        type enumeration {
+            enum spine {
+                value 1;
+            }
+            enum super-spine {
+                value 2;
+            }
+            enum super-super-spine {
+                value 3;
+            }
+        }
+        description
+            "Defines common type to determine type of spine.";
+    }
+
+    typedef encapsulation-type {
+        type enumeration {
+            enum vxlan {
+                value 1;
+            }
+            enum mpls {
+                value 2;
+            }
+        }
+        description
+            "Defines common type to determine type of encapsulation.";
+    }
+
+    typedef l2-domain-type {
+        type enumeration {
+            enum vlan {
+                value 1;
+            }
+            enum bridge-domain {
+                value 2;
+            }
+        }
+    }
+
+    typedef service-interface-type {
+        type enumeration {
+            enum vlan-based {
+                value 1;
+            }
+            enum vlan-bundle {
+                value 2;
+            }
+            enum vlan-aware-bundle {
+                value 3;
+            }
+        }
+    }
+
+    list fabric {
+        description
+            "Defines a data center fabric.";
+        key "name";
+
+        leaf name {
+            type fabric-name-type;
+            description
+                "Name of the data center fabric.";
+        }
+
+        container underlay {
+
+            leaf leaf-asn {
+                type uint32;
+                description
+                    "ASN to which the leaves belongs to.";
+            }
+
+            leaf spine-asn {
+                type uint32;
+                description
+                    "ASN to which the spines belong to.";
+            }
+
+            leaf p2p-link-ip-range {
+                type inet:ipv4-prefix;
+            }
+
+            leaf mct-link-ip-range {
+                type inet:ipv4-prefix;
+            }
+
+            leaf loopback-ip-range {
+                type inet:ipv4-prefix;
+            }
+
+            container bfd {
+                description
+                    "BFD params for the fabric.
+                    If BFD is enabled, BFD protocol can be used to
+                    determine the operational state of the fabric
+                    members and hence the fabric.";
+                leaf enable {
+                    type empty;
+                }
+                leaf min-tx {
+                    type bfd-tx-interval-type;
+                    description
+                        "Configure BFD desired min transmit interval in milliseconds.";
+
+                }
+                leaf min-rx {
+                    type bfd-rx-interval-type;
+                    description
+                        "Configure BFD required min receive interval in milliseconds.";
+
+                }
+                leaf multiplier {
+                    type bfd-multiplier-type;
+                    description
+                        "Configure BFD detection time multiplier.";
+                }
+            }
+
+            list leaf {
+                key "name";
+                leaf name {
+                    type name32-type;
+                    description
+                        "Name of the leaf.";
+                }
+                leaf type {
+                    type leaf-type;
+                    description
+                        "Type of the leaf.";
+                }
+                leaf ipaddr {
+                    type inet:ip-address;
+                }
+                leaf peer-ipaddr {
+                    type inet:ip-address;
+                    description
+                        "Logical VTEP peer.";
+                }
+                leaf ref-node {
+                    type leafref {
+                        path "/fabric/underlay/spine/name";
+                    }
+                }
+            }
+
+            list spine {
+                key "name";
+                leaf name {
+                    type name32-type;
+                    description
+                        "Name of the spine.";
+                }
+                leaf type {
+                    type spine-type;
+                }
+                leaf ipaddr {
+                    type inet:ip-address;
+                }
+            }
+        }
+
+        container overlay {
+
+            leaf dataplane-encap-type {
+                type encapsulation-type;
+            }
+
+            container vxlan {
+                leaf vtep-ip-range {
+                    type inet:ipv4-prefix;
+                }
+                leaf auto-vni-mapping {
+                    type boolean;
+                }
+                container protocol {
+                    leaf bfd {
+                        type boolean;
+                        description "Enable/Disable BFD on the VXLAN tunnels.";
+                    }
+                }
+                leaf conversational-mac {
+                    type boolean;
+                }
+                leaf conversational-arp {
+                    type boolean;
+                }
+                list l2-domain {
+                    key "l2-domain-type l2-domain-value";
+                    leaf l2-domain-type {
+                        type l2-domain-type;
+                    }
+                    leaf l2-domain-value {
+                        type uint32; 
+                    }
+                    leaf service-interface {
+                        type service-interface-type;
+                    }
+                    leaf vni {
+                        type uint32;
+                    }
+                    leaf suppress-arp {
+                        type boolean;
+                    }
+                    leaf suppress-nd {
+                        type boolean;
+                    }
+                }
+
+                list l3-domain {
+                    key "vrf";
+                    leaf vrf {
+                        type string;
+                    }
+                    leaf vni {
+                        type uint32;
+                    }
+                    leaf activate {
+                        type boolean;
+                    }
+                }
+            }
+
+            container mpls {
+            }
+        }
+    }
+}
+

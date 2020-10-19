@@ -1,0 +1,1655 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Simplified IP Fabric</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>Simplified IP Fabric</h1>
+    <div class="app-desc">This is the spec that defines the API provided by the application to register devices to a fabric, configure fabric parameters, validate all the devices in the fabric and configure switches for IP Fabric with/without overlay</div>
+    <div class="app-desc">More information: <a href="http://www.extremenetworks.com">http://www.extremenetworks.com</a></div>
+    <div class="app-desc">Contact Info: <a href="support@extremenetworks.com">support@extremenetworks.com</a></div>
+    <div class="app-desc">Version: 1.0</div>
+    <div class="app-desc">BasePath:/v1</div>
+    <div class="license-info">Apache license</div>
+    <div class="license-url">http://www.extremenetworks.com</div>
+  <h2>Access</h2>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#ClearConfig">ClearConfig</a></h4>
+  <ul>
+  <li><a href="#clearConfig"><code><span class="http-method">post</span> /debug/clear</code></a></li>
+  </ul>
+  <h4><a href="#ConfigShow">ConfigShow</a></h4>
+  <ul>
+  <li><a href="#configShow"><code><span class="http-method">get</span> /config</code></a></li>
+  </ul>
+  <h4><a href="#ConfigureFabric">ConfigureFabric</a></h4>
+  <ul>
+  <li><a href="#configureFabric"><code><span class="http-method">post</span> /configure</code></a></li>
+  </ul>
+  <h4><a href="#ExecutionGet">ExecutionGet</a></h4>
+  <ul>
+  <li><a href="#executionGet"><code><span class="http-method">get</span> /execution</code></a></li>
+  </ul>
+  <h4><a href="#ExecutionList">ExecutionList</a></h4>
+  <ul>
+  <li><a href="#executionList"><code><span class="http-method">get</span> /executions</code></a></li>
+  </ul>
+  <h4><a href="#Fabric">Fabric</a></h4>
+  <ul>
+  <li><a href="#createFabric"><code><span class="http-method">post</span> /fabric</code></a></li>
+  <li><a href="#deleteFabric"><code><span class="http-method">delete</span> /fabric</code></a></li>
+  <li><a href="#getFabric"><code><span class="http-method">get</span> /fabric</code></a></li>
+  <li><a href="#getFabrics"><code><span class="http-method">get</span> /fabrics</code></a></li>
+  <li><a href="#updateFabric"><code><span class="http-method">put</span> /fabric</code></a></li>
+  </ul>
+  <h4><a href="#FabricValidation">FabricValidation</a></h4>
+  <ul>
+  <li><a href="#validateFabric"><code><span class="http-method">get</span> /validate</code></a></li>
+  </ul>
+  <h4><a href="#SupportSave">SupportSave</a></h4>
+  <ul>
+  <li><a href="#supportSave"><code><span class="http-method">get</span> /support</code></a></li>
+  </ul>
+  <h4><a href="#Switch">Switch</a></h4>
+  <ul>
+  <li><a href="#getSwitch"><code><span class="http-method">get</span> /switch</code></a></li>
+  <li><a href="#updateSwitch"><code><span class="http-method">put</span> /switch</code></a></li>
+  </ul>
+  <h4><a href="#Switches">Switches</a></h4>
+  <ul>
+  <li><a href="#createSwitches"><code><span class="http-method">post</span> /switches</code></a></li>
+  <li><a href="#deleteSwitches"><code><span class="http-method">delete</span> /switches</code></a></li>
+  <li><a href="#getSwitches"><code><span class="http-method">get</span> /switches</code></a></li>
+  <li><a href="#updateSwitches"><code><span class="http-method">put</span> /switches</code></a></li>
+  </ul>
+
+  <h1><a name="ClearConfig">ClearConfig</a></h1>
+  <div class="method"><a name="clearConfig"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /debug/clear</code></pre></div>
+    <div class="method-summary">Clear Config (<span class="nickname">clearConfig</span>)</div>
+    <div class="method-notes">Clear Configs from a collection of switches</div>
+
+
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">switches <a href="#DebugClearRequest">DebugClearRequest</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; One or More switches where configs are to be cleared. </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#DebugClearResponse">DebugClearResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "status" : "Successful"
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#DebugClearResponse">DebugClearResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="ConfigShow">ConfigShow</a></h1>
+  <div class="method"><a name="configShow"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /config</code></pre></div>
+    <div class="method-summary">getConfigShow (<span class="nickname">configShow</span>)</div>
+    <div class="method-notes">Get the Configuration of Devices in a Fabric</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">fabricName (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Name of the fabric to retrieve </div><div class="param">role (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; role of the devices for which config needs to be fetched default: all </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ConfigShowResponse">ConfigShowResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "Response" : "Response"
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#ConfigShowResponse">ConfigShowResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="ConfigureFabric">ConfigureFabric</a></h1>
+  <div class="method"><a name="configureFabric"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /configure</code></pre></div>
+    <div class="method-summary">configureFabric (<span class="nickname">configureFabric</span>)</div>
+    <div class="method-notes">Configure IP Fabric for the specified fabric</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">fabric_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Name of the fabric to Configure </div><div class="param">force (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash;  default: false </div><div class="param">persist (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash;  default: false </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ConfigureFabricResponse">ConfigureFabricResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "fabric_name" : "default",
+  "fabric_id" : 1,
+  "status" : "Successful"
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#ConfigureFabricResponse">ConfigureFabricResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="ExecutionGet">ExecutionGet</a></h1>
+  <div class="method"><a name="executionGet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /execution</code></pre></div>
+    <div class="method-summary">getExecutionDetail (<span class="nickname">executionGet</span>)</div>
+    <div class="method-notes">Get the detailed output of the given execution ID</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Detailed output of the given execution ID </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#DetailedExecutionResponse">DetailedExecutionResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "start_time" : "2000-01-23T04:56:07.000+00:00",
+  "end_time" : "2000-01-23T04:56:07.000+00:00",
+  "id" : "id",
+  "parameters" : "configure add",
+  "logs" : "logs",
+  "command" : "configure add",
+  "status" : "Failed, Succeeded"
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#DetailedExecutionResponse">DetailedExecutionResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="ExecutionList">ExecutionList</a></h1>
+  <div class="method"><a name="executionList"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /executions</code></pre></div>
+    <div class="method-summary">getExecutionList (<span class="nickname">executionList</span>)</div>
+    <div class="method-notes">Get the list of all the previous executions</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">limit (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Limit the number of executions that will be sent in the response. Default is 10 default: 10 </div><div class="param">status (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Filter the executions based on the status(failed/succeeded/all) default: all </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#ExecutionsResponse">ExecutionsResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "items" : [ {
+    "start_time" : "2000-01-23T04:56:07.000+00:00",
+    "end_time" : "2000-01-23T04:56:07.000+00:00",
+    "id" : "id",
+    "command" : "configure add",
+    "status" : "configure add"
+  }, {
+    "start_time" : "2000-01-23T04:56:07.000+00:00",
+    "end_time" : "2000-01-23T04:56:07.000+00:00",
+    "id" : "id",
+    "command" : "configure add",
+    "status" : "configure add"
+  } ]
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#ExecutionsResponse">ExecutionsResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Fabric">Fabric</a></h1>
+  <div class="method"><a name="createFabric"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /fabric</code></pre></div>
+    <div class="method-summary">Create a Fabric (<span class="nickname">createFabric</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">fabric <a href="#NewFabric">NewFabric</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Add a new Fabric. </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FabricdataResponse">FabricdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "fabric_name" : "default",
+  "fabric_id" : 1,
+  "fabric_settings" : {
+    "key" : "fabric_settings"
+  }
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FabricdataResponse">FabricdataResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">409</h4>
+    A fabric with the specified name already exists.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteFabric"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /fabric</code></pre></div>
+    <div class="method-summary">deleteFabric (<span class="nickname">deleteFabric</span>)</div>
+    <div class="method-notes">Delete the specified fabric.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Name of the fabric to be deleted </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FabricdataResponse">FabricdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "fabric_name" : "default",
+  "fabric_id" : 1,
+  "fabric_settings" : {
+    "key" : "fabric_settings"
+  }
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FabricdataResponse">FabricdataResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    A fabric with the specified name was not found.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getFabric"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /fabric</code></pre></div>
+    <div class="method-summary">getFabric (<span class="nickname">getFabric</span>)</div>
+    <div class="method-notes">Get only specified fabric details. The fabric can be identified by id or name</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Name of the fabric to retrieve </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FabricdataResponse">FabricdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "fabric_name" : "default",
+  "fabric_id" : 1,
+  "fabric_settings" : {
+    "key" : "fabric_settings"
+  }
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FabricdataResponse">FabricdataResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    A fabric with the specified name was not found.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getFabrics"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /fabrics</code></pre></div>
+    <div class="method-summary">getFabrics (<span class="nickname">getFabrics</span>)</div>
+    <div class="method-notes">Get All fabric details configured in the application</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FabricsdataResponse">FabricsdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "items" : [ {
+    "fabric_name" : "default",
+    "fabric_id" : 1,
+    "fabric_settings" : {
+      "key" : "fabric_settings"
+    }
+  }, {
+    "fabric_name" : "default",
+    "fabric_id" : 1,
+    "fabric_settings" : {
+      "key" : "fabric_settings"
+    }
+  } ]
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FabricsdataResponse">FabricsdataResponse</a>
+    <h4 class="field-label">404</h4>
+    No fabrics found in the system.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateFabric"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /fabric</code></pre></div>
+    <div class="method-summary">Update a Fabric settings (<span class="nickname">updateFabric</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">fabric_settings <a href="#FabricSettings">FabricSettings</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Update Fabric Settings. </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FabricdataResponse">FabricdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "fabric_name" : "default",
+  "fabric_id" : 1,
+  "fabric_settings" : {
+    "key" : "fabric_settings"
+  }
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FabricdataResponse">FabricdataResponse</a>
+    <h4 class="field-label">400</h4>
+    Incorrect values specified for Fabric setting
+        <a href="#"></a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    A fabric with the specified name was not found.
+        <a href="#"></a>
+    <h4 class="field-label">409</h4>
+    A fabric settings already exist and cannot be updated.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#FabricdataErrorResponse">FabricdataErrorResponse</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="FabricValidation">FabricValidation</a></h1>
+  <div class="method"><a name="validateFabric"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /validate</code></pre></div>
+    <div class="method-summary">validateFabric (<span class="nickname">validateFabric</span>)</div>
+    <div class="method-notes">Validate Fabric settings, cabling between switches and potentially configurations on switches for IP Fabric formation</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">fabric_name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Name of the fabric to validate </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#FabricValidateResponse">FabricValidateResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "fabric_name" : "default",
+  "fabric_id" : 1,
+  "missing_links" : [ "missing_links", "missing_links" ],
+  "missing_spines" : true,
+  "fabric_settings" : {
+    "key" : "fabric_settings"
+  },
+  "missing_leaves" : true,
+  "redundant_links" : [ "redundant_links", "redundant_links" ],
+  "leaf_leaf_links" : [ "leaf_leaf_links", "leaf_leaf_links" ],
+  "configuration_drifts" : "{}",
+  "spine_spine_links" : [ "spine_spine_links", "spine_spine_links" ]
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#FabricValidateResponse">FabricValidateResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    A fabric with the specified name was not found.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="SupportSave">SupportSave</a></h1>
+  <div class="method"><a name="supportSave"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /support</code></pre></div>
+    <div class="method-summary">getSupport (<span class="nickname">supportSave</span>)</div>
+    <div class="method-notes">Capture the supportsave data and return the file name in the response</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SupportsaveResponse">SupportsaveResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "ss_file_name" : "ss_file_name"
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SupportsaveResponse">SupportsaveResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Switch">Switch</a></h1>
+  <div class="method"><a name="getSwitch"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /switch</code></pre></div>
+    <div class="method-summary">getSwitch (<span class="nickname">getSwitch</span>)</div>
+    <div class="method-notes">Get only specified Switch details. The Switch can be identified by IP Address</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">ip_address (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; IP Address of the Device </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SwitchdataResponse">SwitchdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "is_principal" : true,
+  "rack" : "Rack1",
+  "role" : "Spine",
+  "fabric" : {
+    "fabric_name" : "default",
+    "fabric_id" : 1
+  },
+  "name" : "sw0",
+  "model" : "SLX9240",
+  "ip_address" : "10.24.39.224",
+  "id" : 1,
+  "state" : "New",
+  "firmware" : "17.01.02",
+  "asn" : 65000
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SwitchdataResponse">SwitchdataResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    A device with the specified IP was not found.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateSwitch"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /switch</code></pre></div>
+    <div class="method-summary">updateSwitch (<span class="nickname">updateSwitch</span>)</div>
+    <div class="method-notes">Update the specified device from the fabric.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">ip_address (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; IP Address of the device to be updated. </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SwitchdataResponse">SwitchdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "is_principal" : true,
+  "rack" : "Rack1",
+  "role" : "Spine",
+  "fabric" : {
+    "fabric_name" : "default",
+    "fabric_id" : 1
+  },
+  "name" : "sw0",
+  "model" : "SLX9240",
+  "ip_address" : "10.24.39.224",
+  "id" : 1,
+  "state" : "New",
+  "firmware" : "17.01.02",
+  "asn" : 65000
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SwitchdataResponse">SwitchdataResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Couldnt connect to the device. Check device credentials.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        <a href="#ErrorModel">ErrorModel</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Switches">Switches</a></h1>
+  <div class="method"><a name="createSwitches"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /switches</code></pre></div>
+    <div class="method-summary">Add new Devices to the specified Fabric (<span class="nickname">createSwitches</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">switches <a href="#NewSwitches">NewSwitches</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Add one or more switches to the fabric. </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SwitchesdataResponse">SwitchesdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "items" : [ {
+    "is_principal" : true,
+    "rack" : "Rack1",
+    "role" : "Spine",
+    "fabric" : {
+      "fabric_name" : "default",
+      "fabric_id" : 1
+    },
+    "name" : "sw0",
+    "model" : "SLX9240",
+    "ip_address" : "10.24.39.224",
+    "id" : 1,
+    "state" : "New",
+    "firmware" : "17.01.02",
+    "asn" : 65000
+  }, {
+    "is_principal" : true,
+    "rack" : "Rack1",
+    "role" : "Spine",
+    "fabric" : {
+      "fabric_name" : "default",
+      "fabric_id" : 1
+    },
+    "name" : "sw0",
+    "model" : "SLX9240",
+    "ip_address" : "10.24.39.224",
+    "id" : 1,
+    "state" : "New",
+    "firmware" : "17.01.02",
+    "asn" : 65000
+  } ]
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SwitchesdataResponse">SwitchesdataResponse</a>
+    <h4 class="field-label">410</h4>
+    Specified fabric doesnt exist
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteSwitches"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /switches</code></pre></div>
+    <div class="method-summary">deleteSwitches (<span class="nickname">deleteSwitches</span>)</div>
+    <div class="method-notes">Delete the specified devices from the fabric.</div>
+
+
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">switches <a href="#DeleteSwitchesRequest">DeleteSwitchesRequest</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; IP Addresses of the device to be deleted. </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SwitchesdataResponse">SwitchesdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "items" : [ {
+    "is_principal" : true,
+    "rack" : "Rack1",
+    "role" : "Spine",
+    "fabric" : {
+      "fabric_name" : "default",
+      "fabric_id" : 1
+    },
+    "name" : "sw0",
+    "model" : "SLX9240",
+    "ip_address" : "10.24.39.224",
+    "id" : 1,
+    "state" : "New",
+    "firmware" : "17.01.02",
+    "asn" : 65000
+  }, {
+    "is_principal" : true,
+    "rack" : "Rack1",
+    "role" : "Spine",
+    "fabric" : {
+      "fabric_name" : "default",
+      "fabric_id" : 1
+    },
+    "name" : "sw0",
+    "model" : "SLX9240",
+    "ip_address" : "10.24.39.224",
+    "id" : 1,
+    "state" : "New",
+    "firmware" : "17.01.02",
+    "asn" : 65000
+  } ]
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SwitchesdataResponse">SwitchesdataResponse</a>
+    <h4 class="field-label">401</h4>
+    Authorization information is missing or invalid.
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    A switch with the specified IP Address was not found.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getSwitches"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /switches</code></pre></div>
+    <div class="method-summary">getSwitches (<span class="nickname">getSwitches</span>)</div>
+    <div class="method-notes">Get All switches in the specified fabric.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">name (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Name of the fabric to retrieve switches for </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SwitchesdataResponse">SwitchesdataResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "items" : [ {
+    "is_principal" : true,
+    "rack" : "Rack1",
+    "role" : "Spine",
+    "fabric" : {
+      "fabric_name" : "default",
+      "fabric_id" : 1
+    },
+    "name" : "sw0",
+    "model" : "SLX9240",
+    "ip_address" : "10.24.39.224",
+    "id" : 1,
+    "state" : "New",
+    "firmware" : "17.01.02",
+    "asn" : 65000
+  }, {
+    "is_principal" : true,
+    "rack" : "Rack1",
+    "role" : "Spine",
+    "fabric" : {
+      "fabric_name" : "default",
+      "fabric_id" : 1
+    },
+    "name" : "sw0",
+    "model" : "SLX9240",
+    "ip_address" : "10.24.39.224",
+    "id" : 1,
+    "state" : "New",
+    "firmware" : "17.01.02",
+    "asn" : 65000
+  } ]
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SwitchesdataResponse">SwitchesdataResponse</a>
+    <h4 class="field-label">404</h4>
+    No switches found for the specified fabric.
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Specified Fabric not found.
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateSwitches"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /switches</code></pre></div>
+    <div class="method-summary">Update One or more switch details. (<span class="nickname">updateSwitches</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">switches <a href="#UpdateSwitchParameters">UpdateSwitchParameters</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Update One or more switch details </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SwitchesUpdateResponse">SwitchesUpdateResponse</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "items" : [ {
+    "device_credentials" : "Device Not configured/Authentication Failure/ Succesfully updated device credentials.",
+    "ip_address" : "10.24.39.224"
+  }, {
+    "device_credentials" : "Device Not configured/Authentication Failure/ Succesfully updated device credentials.",
+    "ip_address" : "10.24.39.224"
+  } ]
+}</code></pre>
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#SwitchesUpdateResponse">SwitchesUpdateResponse</a>
+    <h4 class="field-label">410</h4>
+    Specified fabric doesnt exist
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Unexpected error.
+        <a href="#"></a>
+    <h4 class="field-label">default</h4>
+    Unexpected error
+        
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#ConfigShowResponse"><code>ConfigShowResponse</code> - Config Show Response</a></li>
+    <li><a href="#ConfigureFabricResponse"><code>ConfigureFabricResponse</code> - configure fabric response</a></li>
+    <li><a href="#DebugClearRequest"><code>DebugClearRequest</code> - </a></li>
+    <li><a href="#DebugClearResponse"><code>DebugClearResponse</code> - Debug clear Response</a></li>
+    <li><a href="#DeleteSwitchesRequest"><code>DeleteSwitchesRequest</code> - </a></li>
+    <li><a href="#DetailedExecutionResponse"><code>DetailedExecutionResponse</code> - Detailed output of single execution</a></li>
+    <li><a href="#DeviceStatusModel"><code>DeviceStatusModel</code> - Error Model to depict multiple errors when configuring a device</a></li>
+    <li><a href="#ErrorModel"><code>ErrorModel</code> - </a></li>
+    <li><a href="#ExecutionResponse"><code>ExecutionResponse</code> - Single execution response</a></li>
+    <li><a href="#ExecutionsResponse"><code>ExecutionsResponse</code> - Fabrics Data</a></li>
+    <li><a href="#FabricParameter"><code>FabricParameter</code> - </a></li>
+    <li><a href="#FabricSettings"><code>FabricSettings</code> - </a></li>
+    <li><a href="#FabricValidateResponse"><code>FabricValidateResponse</code> - fabricdata response</a></li>
+    <li><a href="#FabricdataErrorResponse"><code>FabricdataErrorResponse</code> - fabric errordata response</a></li>
+    <li><a href="#FabricdataResponse"><code>FabricdataResponse</code> - fabricdata response</a></li>
+    <li><a href="#FabricsdataErrorResponse"><code>FabricsdataErrorResponse</code> - Fabrics Error Data</a></li>
+    <li><a href="#FabricsdataResponse"><code>FabricsdataResponse</code> - Fabrics Data</a></li>
+    <li><a href="#NewFabric"><code>NewFabric</code> - </a></li>
+    <li><a href="#NewSwitches"><code>NewSwitches</code> - </a></li>
+    <li><a href="#SupportsaveResponse"><code>SupportsaveResponse</code> - supportsave response</a></li>
+    <li><a href="#SwitchUpdateResponse"><code>SwitchUpdateResponse</code> - switch update response</a></li>
+    <li><a href="#SwitchdataResponse"><code>SwitchdataResponse</code> - switchdata response</a></li>
+    <li><a href="#SwitchdataResponse_fabric"><code>SwitchdataResponse_fabric</code> - </a></li>
+    <li><a href="#SwitchesUpdateResponse"><code>SwitchesUpdateResponse</code> - Switches Update Response</a></li>
+    <li><a href="#SwitchesdataResponse"><code>SwitchesdataResponse</code> - Switches Data</a></li>
+    <li><a href="#UpdateSwitchParameters"><code>UpdateSwitchParameters</code> - </a></li>
+    <li><a href="#rack"><code>rack</code> - Rack information</a></li>
+    <li><a href="#ExtendedErrorModel"><code>ExtendedErrorModel</code> - </a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="ConfigShowResponse"><code>ConfigShowResponse</code> - Config Show Response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">Response (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Config Show Response </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ConfigureFabricResponse"><code>ConfigureFabricResponse</code> - configure fabric response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Status of fabric deployment </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">Successful</div><div class="param-enum">Failed</div>
+<div class="param">fabric_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Name of the fabric </div>
+<div class="param">fabric_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Database ID of the fabric format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DebugClearRequest"><code>DebugClearRequest</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">ip_address (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">racks (optional)</div><div class="param-desc"><span class="param-type"><a href="#rack">array[rack]</a></span> array of rack information </div>
+<div class="param">username </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DebugClearResponse"><code>DebugClearResponse</code> - Debug clear Response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Status of fabric deployment </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">Successful</div><div class="param-enum">Failed</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DeleteSwitchesRequest"><code>DeleteSwitchesRequest</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">switches (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">racks (optional)</div><div class="param-desc"><span class="param-type"><a href="#rack">array[rack]</a></span> array of rack information </div>
+<div class="param">device-cleanup (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+<div class="param">persist (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DetailedExecutionResponse"><code>DetailedExecutionResponse</code> - Detailed output of single execution</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> ID of the operation </div>
+<div class="param">command (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Command that was executed </div>
+<div class="param">parameters (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Parameters used in the command </div>
+<div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Status of the command </div>
+<div class="param">start_time (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">end_time (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">logs (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Full logs of the command </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="DeviceStatusModel"><code>DeviceStatusModel</code> - Error Model to depict multiple errors when configuring a device</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">ip_address </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> IP address of the device </div>
+<div class="param">role (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> role of the device </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">Spine</div><div class="param-enum">Leaf</div><div class="param-enum">Super Spine</div><div class="param-enum">Border Leaf</div><div class="param-enum">Standalone</div>
+<div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Status of fabric deployment </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">Successful</div><div class="param-enum">Failed</div>
+<div class="param">error </div><div class="param-desc"><span class="param-type"><a href="#ErrorModel">array[ErrorModel]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ErrorModel"><code>ErrorModel</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">message </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">code </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ExecutionResponse"><code>ExecutionResponse</code> - Single execution response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> ID of the operation </div>
+<div class="param">command (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Command that was executed </div>
+<div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Command that was executed </div>
+<div class="param">start_time (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">end_time (optional)</div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ExecutionsResponse"><code>ExecutionsResponse</code> - Fabrics Data</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#ExecutionResponse">array[ExecutionResponse]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FabricParameter"><code>FabricParameter</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">key </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">value </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FabricSettings"><code>FabricSettings</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">keyval </div><div class="param-desc"><span class="param-type"><a href="#FabricParameter">array[FabricParameter]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FabricValidateResponse"><code>FabricValidateResponse</code> - fabricdata response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">fabric_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Name of the fabric </div>
+<div class="param">fabric_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Database ID of the fabric format: int32</div>
+<div class="param">fabric_settings (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">map[String, String]</a></span>  </div>
+<div class="param">redundant_links (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">spine_spine_links (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">leaf_leaf_links (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">missing_spines (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+<div class="param">missing_leaves (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+<div class="param">missing_links (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">configuration_drifts (optional)</div><div class="param-desc"><span class="param-type"><a href="#object">Object</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FabricdataErrorResponse"><code>FabricdataErrorResponse</code> - fabric errordata response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">fabric_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Name of the fabric </div>
+<div class="param">fabric_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Database ID of the fabric format: int32</div>
+<div class="param">fabric_settings (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">map[String, String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FabricdataResponse"><code>FabricdataResponse</code> - fabricdata response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">fabric_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Name of the fabric </div>
+<div class="param">fabric_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Database ID of the fabric format: int32</div>
+<div class="param">fabric_settings (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">map[String, String]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FabricsdataErrorResponse"><code>FabricsdataErrorResponse</code> - Fabrics Error Data</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#FabricdataErrorResponse">array[FabricdataErrorResponse]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FabricsdataResponse"><code>FabricsdataResponse</code> - Fabrics Data</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#FabricdataResponse">array[FabricdataResponse]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="NewFabric"><code>NewFabric</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="NewSwitches"><code>NewSwitches</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">spine_ip_address (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">leaf_ip_address (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">racks (optional)</div><div class="param-desc"><span class="param-type"><a href="#rack">array[rack]</a></span> array of rack information </div>
+<div class="param">fabric </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">username </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">force (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SupportsaveResponse"><code>SupportsaveResponse</code> - supportsave response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">ss_file_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> File including path of the support save capture data </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SwitchUpdateResponse"><code>SwitchUpdateResponse</code> - switch update response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">ip_address (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> IP address of the device </div>
+<div class="param">device_credentials (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Update status of device credentials </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SwitchdataResponse"><code>SwitchdataResponse</code> - switchdata response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">fabric (optional)</div><div class="param-desc"><span class="param-type"><a href="#SwitchdataResponse_fabric">SwitchdataResponse_fabric</a></span>  </div>
+<div class="param">ip_address (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> IP address of the device </div>
+<div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> name of the device </div>
+<div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> database ID of the device </div>
+<div class="param">role (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> role of the device </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">Spine</div><div class="param-enum">Leaf</div><div class="param-enum">Super Spine</div><div class="param-enum">Border Leaf</div><div class="param-enum">Standalone</div>
+<div class="param">model (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Model of the device </div>
+<div class="param">firmware (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Firmware on the device </div>
+<div class="param">rack (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Rack where device belongs to </div>
+<div class="param">asn (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> ASN assigned to the device. Can be empty </div>
+<div class="param">state (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> State of the device </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">New</div><div class="param-enum">Failed Provisioning</div><div class="param-enum">Provisioned</div>
+<div class="param">is_principal (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> true indicates that the device is principal if its part of the cluster </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SwitchdataResponse_fabric"><code>SwitchdataResponse_fabric</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">fabric_name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Name of the fabric </div>
+<div class="param">fabric_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Database ID of the fabric format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SwitchesUpdateResponse"><code>SwitchesUpdateResponse</code> - Switches Update Response</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#SwitchUpdateResponse">array[SwitchUpdateResponse]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SwitchesdataResponse"><code>SwitchesdataResponse</code> - Switches Data</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">items (optional)</div><div class="param-desc"><span class="param-type"><a href="#SwitchdataResponse">array[SwitchdataResponse]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UpdateSwitchParameters"><code>UpdateSwitchParameters</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">device_ip_address </div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">username </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="rack"><code>rack</code> - Rack information</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">RackDevices (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span> Pair of IP address of the device belonging to this rack </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ExtendedErrorModel"><code>ExtendedErrorModel</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">message </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">code </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+<div class="param">rootCause </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>

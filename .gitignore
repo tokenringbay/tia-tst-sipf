@@ -1,0 +1,17 @@
+bin
+pkg
+dcfabric.db
+dcf.db
+esa.db
+.cache
+.settings
+.idea
+*.a
+*.exe
+**/output.xml
+**/log.html
+**/report.html
+coverage.out
+coverage.html
+coverage_vanilla.html
+reports

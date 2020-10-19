@@ -1,0 +1,1218 @@
+---
+swagger: "2.0"
+info:
+  description: "This is the spec that defines the API provided by the application\
+    \ to register devices to a fabric, configure fabric parameters, validate all the\
+    \ devices in the fabric and configure switches for IP Fabric with/without overlay"
+  version: "1.0"
+  title: "Simplified IP Fabric"
+  contact:
+    name: "Extreme Networks"
+    url: "http://www.extremenetworks.com"
+    email: "support@extremenetworks.com"
+  license:
+    name: "Apache license"
+    url: "http://www.extremenetworks.com"
+host: "localhost:8081"
+basePath: "/v1"
+schemes:
+- "http"
+paths:
+  /fabrics:
+    get:
+      tags:
+      - "Fabric"
+      summary: "getFabrics"
+      description: "Get All fabric details configured in the application"
+      operationId: "GetFabrics"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FabricsdataResponse"
+        404:
+          description: "No fabrics found in the system."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /fabric:
+    get:
+      tags:
+      - "Fabric"
+      summary: "getFabric"
+      description: "Get only specified fabric details. The fabric can be identified\
+        \ by id or name"
+      operationId: "GetFabric"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Name of the fabric to retrieve"
+        required: true
+        type: "string"
+        x-exportParamName: "Name"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FabricdataResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        404:
+          description: "A fabric with the specified name was not found."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+    post:
+      tags:
+      - "Fabric"
+      summary: "Create a Fabric"
+      operationId: "createFabric"
+      parameters:
+      - in: "body"
+        name: "fabric"
+        description: "Add a new Fabric."
+        required: false
+        schema:
+          $ref: "#/definitions/NewFabric"
+        x-exportParamName: "Fabric"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FabricdataResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        409:
+          description: "A fabric with the specified name already exists."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+    put:
+      tags:
+      - "Fabric"
+      summary: "Update a Fabric settings"
+      operationId: "updateFabric"
+      parameters:
+      - in: "body"
+        name: "fabric_settings"
+        description: "Update Fabric Settings."
+        required: false
+        schema:
+          $ref: "#/definitions/FabricSettings"
+        x-exportParamName: "FabricSettings"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FabricdataResponse"
+        400:
+          description: "Incorrect values specified for Fabric setting"
+        401:
+          description: "Authorization information is missing or invalid."
+        404:
+          description: "A fabric with the specified name was not found."
+        409:
+          description: "A fabric settings already exist and cannot be updated."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/FabricdataErrorResponse"
+    delete:
+      tags:
+      - "Fabric"
+      summary: "deleteFabric"
+      description: "Delete the specified fabric."
+      operationId: "DeleteFabric"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Name of the fabric to be deleted"
+        required: true
+        type: "string"
+        x-exportParamName: "Name"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FabricdataResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        404:
+          description: "A fabric with the specified name was not found."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /switch:
+    get:
+      tags:
+      - "Switch"
+      summary: "getSwitch"
+      description: "Get only specified Switch details. The Switch can be identified\
+        \ by IP Address"
+      operationId: "GetSwitch"
+      parameters:
+      - name: "ip_address"
+        in: "query"
+        description: "IP Address of the Device"
+        required: true
+        type: "string"
+        x-exportParamName: "IpAddress"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SwitchdataResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        404:
+          description: "A device with the specified IP was not found."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+    put:
+      tags:
+      - "Switch"
+      summary: "updateSwitch"
+      description: "Update the specified device from the fabric."
+      operationId: "UpdateSwitch"
+      parameters:
+      - name: "ip_address"
+        in: "query"
+        description: "IP Address of the device to be updated."
+        required: true
+        type: "string"
+        x-exportParamName: "IpAddress"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SwitchdataResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        404:
+          description: "Couldnt connect to the device. Check device credentials."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /switches:
+    get:
+      tags:
+      - "Switches"
+      summary: "getSwitches"
+      description: "Get All switches in the specified fabric."
+      operationId: "GetSwitches"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Name of the fabric to retrieve switches for"
+        required: true
+        type: "string"
+        x-exportParamName: "Name"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SwitchesdataResponse"
+        404:
+          description: "No switches found for the specified fabric."
+        422:
+          description: "Specified Fabric not found."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/DeviceStatusModel"
+    post:
+      tags:
+      - "Switches"
+      summary: "Add new Devices to the specified Fabric"
+      operationId: "createSwitches"
+      parameters:
+      - in: "body"
+        name: "switches"
+        description: "Add one or more switches to the fabric."
+        required: false
+        schema:
+          $ref: "#/definitions/NewSwitches"
+        x-exportParamName: "Switches"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SwitchesdataResponse"
+        410:
+          description: "Specified fabric doesnt exist"
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/DeviceStatusModel"
+    put:
+      tags:
+      - "Switches"
+      summary: "Update One or more switch details."
+      operationId: "updateSwitches"
+      parameters:
+      - in: "body"
+        name: "switches"
+        description: "Update One or more switch details"
+        required: false
+        schema:
+          $ref: "#/definitions/UpdateSwitchParameters"
+        x-exportParamName: "Switches"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SwitchesUpdateResponse"
+        410:
+          description: "Specified fabric doesnt exist"
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/DeviceStatusModel"
+    delete:
+      tags:
+      - "Switches"
+      summary: "deleteSwitches"
+      description: "Delete the specified devices from the fabric."
+      operationId: "DeleteSwitches"
+      parameters:
+      - in: "body"
+        name: "switches"
+        description: "IP Addresses of the device to be deleted."
+        required: false
+        schema:
+          $ref: "#/definitions/DeleteSwitchesRequest"
+        x-exportParamName: "Switches"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SwitchesdataResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        404:
+          description: "A switch with the specified IP Address was not found."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/DeviceStatusModel"
+  /validate:
+    get:
+      tags:
+      - "Fabric Validation"
+      summary: "validateFabric"
+      description: "Validate Fabric settings, cabling between switches and potentially\
+        \ configurations on switches for IP Fabric formation"
+      operationId: "ValidateFabric"
+      parameters:
+      - name: "fabric_name"
+        in: "query"
+        description: "Name of the fabric to validate"
+        required: true
+        type: "string"
+        x-exportParamName: "FabricName"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FabricValidateResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        404:
+          description: "A fabric with the specified name was not found."
+        500:
+          description: "Unexpected error."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/DeviceStatusModel"
+  /configure:
+    post:
+      tags:
+      - "Configure Fabric"
+      summary: "configureFabric"
+      description: "Configure IP Fabric for the specified fabric"
+      operationId: "ConfigureFabric"
+      parameters:
+      - name: "fabric_name"
+        in: "query"
+        description: "Name of the fabric to Configure"
+        required: true
+        type: "string"
+        x-exportParamName: "FabricName"
+      - name: "force"
+        in: "query"
+        required: false
+        type: "boolean"
+        default: false
+        x-exportParamName: "Force"
+      - name: "persist"
+        in: "query"
+        required: false
+        type: "boolean"
+        default: false
+        x-exportParamName: "Persist"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ConfigureFabricResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/DeviceStatusModel"
+  /debug/clear:
+    post:
+      tags:
+      - "Clear Config"
+      summary: "Clear Config"
+      description: "Clear Configs from a collection of switches"
+      operationId: "ClearConfig"
+      parameters:
+      - in: "body"
+        name: "switches"
+        description: "One or More switches where configs are to be cleared."
+        required: false
+        schema:
+          $ref: "#/definitions/DebugClearRequest"
+        x-exportParamName: "Switches"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/DebugClearResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /support:
+    get:
+      tags:
+      - "SupportSave"
+      summary: "getSupport"
+      description: "Capture the supportsave data and return the file name in the response"
+      operationId: "SupportSave"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SupportsaveResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /execution:
+    get:
+      tags:
+      - "Execution get"
+      summary: "getExecutionDetail"
+      description: "Get the detailed output of the given execution ID"
+      operationId: "ExecutionGet"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "Detailed output of the given execution ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/DetailedExecutionResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /executions:
+    get:
+      tags:
+      - "Execution list"
+      summary: "getExecutionList"
+      description: "Get the list of all the previous executions"
+      operationId: "ExecutionList"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Limit the number of executions that will be sent in the response.\
+          \ Default is 10"
+        required: true
+        type: "integer"
+        default: 10
+        x-exportParamName: "Limit"
+      - name: "status"
+        in: "query"
+        description: "Filter the executions based on the status(failed/succeeded/all)"
+        required: false
+        type: "string"
+        default: "all"
+        x-exportParamName: "Status"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ExecutionsResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /config:
+    get:
+      tags:
+      - "ConfigShow"
+      summary: "getConfigShow"
+      description: "Get the Configuration of Devices in a Fabric"
+      operationId: "ConfigShow"
+      parameters:
+      - name: "fabricName"
+        in: "query"
+        description: "Name of the fabric to retrieve"
+        required: true
+        type: "string"
+        x-exportParamName: "FabricName"
+      - name: "role"
+        in: "query"
+        description: "role of the devices for which config needs to be fetched"
+        required: true
+        type: "string"
+        default: "all"
+        enum:
+        - "spines"
+        - "leaves"
+        - "all"
+        x-exportParamName: "Role"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ConfigShowResponse"
+        401:
+          description: "Authorization information is missing or invalid."
+        500:
+          description: "Unexpected error."
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+definitions:
+  NewFabric:
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+    example:
+      name: "name"
+  FabricParameter:
+    required:
+    - "key"
+    - "value"
+    properties:
+      key:
+        type: "string"
+      value:
+        type: "string"
+    example:
+      value: "value"
+      key: "key"
+  FabricSettings:
+    required:
+    - "keyval"
+    - "name"
+    properties:
+      name:
+        type: "string"
+      keyval:
+        type: "array"
+        items:
+          $ref: "#/definitions/FabricParameter"
+    example:
+      name: "name"
+      keyval:
+      - value: "value"
+        key: "key"
+      - value: "value"
+        key: "key"
+  DebugClearRequest:
+    required:
+    - "password"
+    - "username"
+    properties:
+      ip_address:
+        type: "array"
+        example:
+        - "10.24.39.204"
+        - "10.24.39.207"
+        items:
+          type: "string"
+      racks:
+        type: "array"
+        description: "array of rack information"
+        items:
+          $ref: "#/definitions/rack"
+      username:
+        type: "string"
+      password:
+        type: "string"
+    example:
+      password: "password"
+      racks:
+      - RackDevices:
+        - "10.24.39.204"
+        - "10.24.39.207"
+      - RackDevices:
+        - "10.24.39.204"
+        - "10.24.39.207"
+      ip_address:
+      - "10.24.39.204"
+      - "10.24.39.207"
+      username: "username"
+  DeleteSwitchesRequest:
+    properties:
+      switches:
+        type: "array"
+        example:
+        - "10.24.39.204"
+        - "10.24.39.207"
+        items:
+          type: "string"
+      racks:
+        type: "array"
+        description: "array of rack information"
+        items:
+          $ref: "#/definitions/rack"
+      device-cleanup:
+        type: "boolean"
+        default: false
+      persist:
+        type: "boolean"
+        default: false
+    example:
+      switches:
+      - "10.24.39.204"
+      - "10.24.39.207"
+      racks:
+      - RackDevices:
+        - "10.24.39.204"
+        - "10.24.39.207"
+      - RackDevices:
+        - "10.24.39.204"
+        - "10.24.39.207"
+      persist: false
+      device-cleanup: false
+  NewSwitches:
+    required:
+    - "fabric"
+    - "password"
+    - "username"
+    properties:
+      spine_ip_address:
+        type: "array"
+        example:
+        - "10.24.39.204"
+        - "10.24.39.207"
+        items:
+          type: "string"
+      leaf_ip_address:
+        type: "array"
+        example:
+        - "10.24.39.208"
+        - "10.24.39.209"
+        items:
+          type: "string"
+      racks:
+        type: "array"
+        description: "array of rack information"
+        items:
+          $ref: "#/definitions/rack"
+      fabric:
+        type: "string"
+      username:
+        type: "string"
+      password:
+        type: "string"
+      force:
+        type: "boolean"
+        default: false
+    example:
+      password: "password"
+      fabric: "fabric"
+      racks:
+      - RackDevices:
+        - "10.24.39.204"
+        - "10.24.39.207"
+      - RackDevices:
+        - "10.24.39.204"
+        - "10.24.39.207"
+      leaf_ip_address:
+      - "10.24.39.208"
+      - "10.24.39.209"
+      force: false
+      spine_ip_address:
+      - "10.24.39.204"
+      - "10.24.39.207"
+      username: "username"
+  UpdateSwitchParameters:
+    required:
+    - "device_ip_address"
+    - "password"
+    - "username"
+    properties:
+      device_ip_address:
+        type: "array"
+        example:
+        - "10.24.39.204"
+        - "10.24.39.207"
+        items:
+          type: "string"
+      username:
+        type: "string"
+      password:
+        type: "string"
+    example:
+      password: "password"
+      device_ip_address:
+      - "10.24.39.204"
+      - "10.24.39.207"
+      username: "username"
+  SupportsaveResponse:
+    type: "object"
+    properties:
+      ss_file_name:
+        type: "string"
+        description: "File including path of the support save capture data"
+    title: "supportsave response"
+    example:
+      ss_file_name: "ss_file_name"
+  ConfigShowResponse:
+    type: "object"
+    properties:
+      Response:
+        type: "string"
+        description: "Config Show Response"
+    title: "Config Show Response"
+    example:
+      Response: "Response"
+  ExecutionsResponse:
+    properties:
+      items:
+        type: "array"
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/ExecutionResponse"
+    title: "Fabrics Data"
+    example:
+      items:
+      - start_time: "2000-01-23T04:56:07.000+00:00"
+        end_time: "2000-01-23T04:56:07.000+00:00"
+        id: "id"
+        command: "configure add"
+        status: "configure add"
+      - start_time: "2000-01-23T04:56:07.000+00:00"
+        end_time: "2000-01-23T04:56:07.000+00:00"
+        id: "id"
+        command: "configure add"
+        status: "configure add"
+  ExecutionResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "ID of the operation"
+      command:
+        type: "string"
+        example: "configure add"
+        description: "Command that was executed"
+      status:
+        type: "string"
+        example: "configure add"
+        description: "Command that was executed"
+      start_time:
+        type: "string"
+        format: "date-time"
+      end_time:
+        type: "string"
+        format: "date-time"
+    title: "Single execution response"
+    example:
+      start_time: "2000-01-23T04:56:07.000+00:00"
+      end_time: "2000-01-23T04:56:07.000+00:00"
+      id: "id"
+      command: "configure add"
+      status: "configure add"
+  DetailedExecutionResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "ID of the operation"
+      command:
+        type: "string"
+        example: "configure add"
+        description: "Command that was executed"
+      parameters:
+        type: "string"
+        example: "configure add"
+        description: "Parameters used in the command"
+      status:
+        type: "string"
+        example: "Failed, Succeeded"
+        description: "Status of the command"
+      start_time:
+        type: "string"
+        format: "date-time"
+      end_time:
+        type: "string"
+        format: "date-time"
+      logs:
+        type: "string"
+        description: "Full logs of the command"
+    title: "Detailed output of single execution"
+    example:
+      start_time: "2000-01-23T04:56:07.000+00:00"
+      end_time: "2000-01-23T04:56:07.000+00:00"
+      id: "id"
+      parameters: "configure add"
+      logs: "logs"
+      command: "configure add"
+      status: "Failed, Succeeded"
+  DebugClearResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        description: "Status of fabric deployment"
+        enum:
+        - "Successful"
+        - "Failed"
+    title: "Debug clear Response"
+    example:
+      status: "Successful"
+  ConfigureFabricResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        description: "Status of fabric deployment"
+        enum:
+        - "Successful"
+        - "Failed"
+      fabric_name:
+        type: "string"
+        example: "default"
+        description: "Name of the fabric"
+      fabric_id:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "Database ID of the fabric"
+    title: "configure fabric response"
+    example:
+      fabric_name: "default"
+      fabric_id: 1
+      status: "Successful"
+  FabricdataResponse:
+    type: "object"
+    properties:
+      fabric_name:
+        type: "string"
+        example: "default"
+        description: "Name of the fabric"
+      fabric_id:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "Database ID of the fabric"
+      fabric_settings:
+        type: "object"
+        additionalProperties:
+          type: "string"
+    title: "fabricdata response"
+    example:
+      fabric_name: "default"
+      fabric_id: 1
+      fabric_settings:
+        key: "fabric_settings"
+  FabricsdataResponse:
+    properties:
+      items:
+        type: "array"
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/FabricdataResponse"
+    title: "Fabrics Data"
+    example:
+      items:
+      - fabric_name: "default"
+        fabric_id: 1
+        fabric_settings:
+          key: "fabric_settings"
+      - fabric_name: "default"
+        fabric_id: 1
+        fabric_settings:
+          key: "fabric_settings"
+  FabricdataErrorResponse:
+    type: "object"
+    properties:
+      fabric_name:
+        type: "string"
+        example: "default"
+        description: "Name of the fabric"
+      fabric_id:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "Database ID of the fabric"
+      fabric_settings:
+        type: "object"
+        additionalProperties:
+          type: "string"
+    title: "fabric errordata response"
+  FabricsdataErrorResponse:
+    properties:
+      items:
+        type: "array"
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/FabricdataErrorResponse"
+    title: "Fabrics Error Data"
+  FabricValidateResponse:
+    type: "object"
+    properties:
+      fabric_name:
+        type: "string"
+        example: "default"
+        description: "Name of the fabric"
+      fabric_id:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "Database ID of the fabric"
+      fabric_settings:
+        type: "object"
+        additionalProperties:
+          type: "string"
+      redundant_links:
+        type: "array"
+        items:
+          type: "string"
+      spine_spine_links:
+        type: "array"
+        items:
+          type: "string"
+      leaf_leaf_links:
+        type: "array"
+        items:
+          type: "string"
+      missing_spines:
+        type: "boolean"
+      missing_leaves:
+        type: "boolean"
+      missing_links:
+        type: "array"
+        items:
+          type: "string"
+      configuration_drifts:
+        type: "object"
+        properties: {}
+    title: "fabricdata response"
+    example:
+      fabric_name: "default"
+      fabric_id: 1
+      missing_links:
+      - "missing_links"
+      - "missing_links"
+      missing_spines: true
+      fabric_settings:
+        key: "fabric_settings"
+      missing_leaves: true
+      redundant_links:
+      - "redundant_links"
+      - "redundant_links"
+      leaf_leaf_links:
+      - "leaf_leaf_links"
+      - "leaf_leaf_links"
+      configuration_drifts: "{}"
+      spine_spine_links:
+      - "spine_spine_links"
+      - "spine_spine_links"
+  SwitchesdataResponse:
+    properties:
+      items:
+        type: "array"
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/SwitchdataResponse"
+    title: "Switches Data"
+    example:
+      items:
+      - is_principal: true
+        rack: "Rack1"
+        role: "Spine"
+        fabric:
+          fabric_name: "default"
+          fabric_id: 1
+        name: "sw0"
+        model: "SLX9240"
+        ip_address: "10.24.39.224"
+        id: 1
+        state: "New"
+        firmware: "17.01.02"
+        asn: 65000
+      - is_principal: true
+        rack: "Rack1"
+        role: "Spine"
+        fabric:
+          fabric_name: "default"
+          fabric_id: 1
+        name: "sw0"
+        model: "SLX9240"
+        ip_address: "10.24.39.224"
+        id: 1
+        state: "New"
+        firmware: "17.01.02"
+        asn: 65000
+  SwitchdataResponse:
+    type: "object"
+    properties:
+      fabric:
+        $ref: "#/definitions/SwitchdataResponse_fabric"
+      ip_address:
+        type: "string"
+        example: "10.24.39.224"
+        description: "IP address of the device"
+      name:
+        type: "string"
+        example: "sw0"
+        description: "name of the device"
+      id:
+        type: "integer"
+        example: 1
+        description: "database ID of the device"
+      role:
+        type: "string"
+        description: "role of the device"
+        enum:
+        - "Spine"
+        - "Leaf"
+        - "Super Spine"
+        - "Border Leaf"
+        - "Standalone"
+      model:
+        type: "string"
+        example: "SLX9240"
+        description: "Model of the device"
+      firmware:
+        type: "string"
+        example: "17.01.02"
+        description: "Firmware on the device"
+      rack:
+        type: "string"
+        example: "Rack1"
+        description: "Rack where device belongs to"
+      asn:
+        type: "integer"
+        example: 65000
+        description: "ASN assigned to the device. Can be empty"
+      state:
+        type: "string"
+        description: "State of the device"
+        enum:
+        - "New"
+        - "Failed Provisioning"
+        - "Provisioned"
+      is_principal:
+        type: "boolean"
+        description: "true indicates that the device is principal if its part of the\
+          \ cluster"
+    title: "switchdata response"
+    example:
+      is_principal: true
+      rack: "Rack1"
+      role: "Spine"
+      fabric:
+        fabric_name: "default"
+        fabric_id: 1
+      name: "sw0"
+      model: "SLX9240"
+      ip_address: "10.24.39.224"
+      id: 1
+      state: "New"
+      firmware: "17.01.02"
+      asn: 65000
+  SwitchesUpdateResponse:
+    properties:
+      items:
+        type: "array"
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/SwitchUpdateResponse"
+    title: "Switches Update Response"
+    example:
+      items:
+      - device_credentials: "Device Not configured/Authentication Failure/ Succesfully\
+          \ updated device credentials."
+        ip_address: "10.24.39.224"
+      - device_credentials: "Device Not configured/Authentication Failure/ Succesfully\
+          \ updated device credentials."
+        ip_address: "10.24.39.224"
+  SwitchUpdateResponse:
+    type: "object"
+    properties:
+      ip_address:
+        type: "string"
+        example: "10.24.39.224"
+        description: "IP address of the device"
+      device_credentials:
+        type: "string"
+        example: "Device Not configured/Authentication Failure/ Succesfully updated\
+          \ device credentials."
+        description: "Update status of device credentials"
+    title: "switch update response"
+    example:
+      device_credentials: "Device Not configured/Authentication Failure/ Succesfully\
+        \ updated device credentials."
+      ip_address: "10.24.39.224"
+  DeviceStatusModel:
+    type: "object"
+    required:
+    - "error"
+    - "ip_address"
+    properties:
+      ip_address:
+        type: "string"
+        example: "10.24.39.224"
+        description: "IP address of the device"
+      role:
+        type: "string"
+        description: "role of the device"
+        enum:
+        - "Spine"
+        - "Leaf"
+        - "Super Spine"
+        - "Border Leaf"
+        - "Standalone"
+      status:
+        type: "string"
+        description: "Status of fabric deployment"
+        enum:
+        - "Successful"
+        - "Failed"
+      error:
+        type: "array"
+        items:
+          $ref: "#/definitions/ErrorModel"
+        minItems: 1
+    title: "Error Model to depict multiple errors when configuring a device"
+  ErrorModel:
+    type: "object"
+    required:
+    - "code"
+    - "message"
+    properties:
+      message:
+        type: "string"
+      code:
+        type: "integer"
+        minimum: 100
+        maximum: 600
+  ExtendedErrorModel:
+    allOf:
+    - $ref: "#/definitions/ErrorModel"
+    - type: "object"
+      required:
+      - "rootCause"
+      properties:
+        rootCause:
+          type: "string"
+  rack:
+    properties:
+      RackDevices:
+        type: "array"
+        example:
+        - "10.24.39.204"
+        - "10.24.39.207"
+        description: "Pair of IP address of the device belonging to this rack"
+        items:
+          type: "string"
+        maxItems: 2
+        minItems: 2
+    title: "Rack information"
+    example:
+      RackDevices:
+      - "10.24.39.204"
+      - "10.24.39.207"
+  SwitchdataResponse_fabric:
+    properties:
+      fabric_name:
+        type: "string"
+        example: "default"
+        description: "Name of the fabric"
+      fabric_id:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "Database ID of the fabric"
+    example:
+      fabric_name: "default"
+      fabric_id: 1
