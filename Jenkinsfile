@@ -22,6 +22,7 @@ pipeline {
                     #So setting here
                     # sudo apt-get install -y upx
                     export PATH=$PATH:/usr/local/go/bin
+                    ls -ltr $HOME_DIR/src/efa-server
                     cd $HOME_DIR/src/efa-server
                     go vet $(go list ./... | grep -v generated)
                     BUILD_STAMP=`date +%y-%m-%d:%H:%M:%S`
@@ -32,8 +33,6 @@ pipeline {
                     upx $HOME_DIR/bin/efa-server
                     ls -lh  $HOME_DIR/bin/efa-server
                 '''
-                input 'Deploy to Production?'
-                milestone(1)
             }
         }
         stage('build-client') {
