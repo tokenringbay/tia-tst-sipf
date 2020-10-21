@@ -77,7 +77,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'bin/efa*, fingerprint: true
+            archiveArtifacts artifacts: 'bin/efa*', fingerprint: true
         }
      }
 }
