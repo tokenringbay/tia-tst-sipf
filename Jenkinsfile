@@ -1,7 +1,7 @@
 pipeline {
     agent { docker 'ubuntu_golang_1_11' }
     environment {
-          HOME_DIR = "$WORKSPACE/SimplifiedIPFabric"
+          HOME_DIR = "$WORKSPACE"
           REPORT_DIR = "$HOME_DIR/reports"
           GOPATH = "$HOME_DIR"
           TEST_DIR= "$HOME_DIR/src/efa-server/test"
