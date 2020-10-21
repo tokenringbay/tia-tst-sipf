@@ -32,6 +32,8 @@ pipeline {
                     upx $HOME_DIR/bin/efa-server
                     ls -lh  $HOME_DIR/bin/efa-server
                 '''
+                input 'Deploy to Production?'
+                milestone(1)
             }
         }
         stage('build-client') {
