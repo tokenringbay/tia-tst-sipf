@@ -20,7 +20,7 @@ pipeline {
                 sh '''
                     #Setting PATH variable in environment section not working
                     #So setting here
-                    sudo apt-get install -y upx
+                    # sudo apt-get install -y upx
                     export PATH=$PATH:/usr/local/go/bin
                     cd $HOME_DIR/src/efa-server
                     go vet $(go list ./... | grep -v generated)
