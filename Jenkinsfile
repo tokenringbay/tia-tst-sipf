@@ -77,8 +77,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'SimplifiedIPFabric/bin/efa*,SimplifiedIPFabric/reports/*.html,SimplifiedIPFabric/reports/*_output', fingerprint: true
-            junit 'SimplifiedIPFabric/reports/test_junit.xml'
+            archiveArtifacts artifacts: 'bin/efa*, fingerprint: true
         }
      }
 }
