@@ -1,5 +1,5 @@
 pipeline {
-    agent k8s 
+    agent { k8s }
     stages {
         stage('Build Docker Image') {
             when {
