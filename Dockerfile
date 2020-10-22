@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update
-RUN apt-get install -y wget git gcc
+RUN apt-get install -y wget git gcc sudo upx
 
 RUN wget -P /tmp https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz
 
