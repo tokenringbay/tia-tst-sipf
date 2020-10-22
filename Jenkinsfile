@@ -1,5 +1,5 @@
 pipeline {
-    agent { label k8s }
+    agent { label 'k8s' }
     stages {
         stage('Build Docker Image') {
             when {
